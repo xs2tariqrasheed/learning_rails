@@ -27,6 +27,12 @@ class BooksController < ApplicationController
   # PATCH/PUT /books/1
   def update
     if @book.update(book_params)
+      if params[:book][:publisher_id].present?
+        publisher = Publisher.find_by_id(params[:book][:publisher_id])
+        if publisher
+          @book.publishers << publisher
+        end
+      end
       render json: @book
     else
       render json: @book.errors, status: :unprocessable_entity
